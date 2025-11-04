@@ -6,6 +6,7 @@ import csv
 import os
 
 import Image_Loader as Image_Loader
+import Image_Processing as Image_Processing
 
 config = configparser.ConfigParser()
 config.read('Python/config.ini')
@@ -23,5 +24,7 @@ image_loader = Image_Loader.Image_Loader(config['settings']['picture_path'])
 images = image_loader.load_folder_images()
 
 for image in images:
+    image_processor = Image_Processing.Image_Processing(colors, ranges)
+    image_processor.process_images(image)
     cv2.imshow('Image', image)
     cv2.waitKey(0)
