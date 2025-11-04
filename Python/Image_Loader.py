@@ -1,7 +1,7 @@
 import cv2
 import os
 
-class ImageLoader:
+class Image_Loader:
     def __init__(self, image_path):
         self.image_path = image_path
 
