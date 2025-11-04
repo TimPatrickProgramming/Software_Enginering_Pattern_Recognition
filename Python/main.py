@@ -1,11 +1,18 @@
 import configparser
+import numpy as np
+import cv2
+import datetime
+import csv
+import os
+
+import ImageLoader
 
 config = configparser.ConfigParser()
 config.read('Python/config.ini')
 
-# Access values
-fontscale = config['settings'].getfloat('fontscale', 1.0)  # with default fallback
-thickness = config['settings'].getint('thickness', 2)  # with default fallback
-text_color = eval(config['settings'].get('text_color', '(255,255,255)'))  # with default fallback
+image_loader = ImageLoader.ImageLoader(config['settings']['picture_path'])
+images = image_loader.load_folder_images()
 
-print(f"Font Scale: {fontscale}, Thickness: {thickness}, Text Color: {text_color}")
+for image in images:
+    cv2.imshow('Image', image)
+    cv2.waitKey(0)
