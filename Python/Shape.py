@@ -9,20 +9,24 @@ class Shape(ABC):
 
 
 class Triangle(Shape):
-    def __init__(self, approx):
+    def __init__(self, approx, color_name):
         self.approx = approx
+        self.color_name = color_name
 
 
 class Rectangle(Shape):
-    def __init__(self, approx):
+    def __init__(self, approx, color_name):
         self.approx = approx
+        self.color_name = color_name
 
 
 class Square(Shape):
-    def __init__(self, approx):
+    def __init__(self, approx, color_name):
         self.approx = approx
+        self.color_name = color_name
 
 
 class Circle(Shape):
-    def __init__(self, approx):
+    def __init__(self, approx, color_name):
         self.approx = approx
+        self.color_name = color_name

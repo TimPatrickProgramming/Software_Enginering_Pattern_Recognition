@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 
 import Shape
+import Visualisation
 
 class Image_Processing:
     def __init__(self, colors, ranges):
@@ -10,6 +11,7 @@ class Image_Processing:
 
     def process_images(self, image):
         hsvFrame = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        shapes = []
         for color_name, (lower, upper) in self.ranges.items():
             lower_np = np.array(lower, np.uint8)
             upper_np = np.array(upper, np.uint8)
@@ -26,20 +28,22 @@ class Image_Processing:
                     # Get the minimum area rectangle
                     rect = cv2.minAreaRect(contour)
                     box = cv2.boxPoints(rect)     # Get 4 corner points
-                    box = np.int0(box)            # Convert to int
+                    box = np.int8(box)            # Convert to int
                     # Initialize shape_selector
                     if shape == 3:
-                        triangle = Shape.Triangle(approx)
+                        shapes.append(Shape.Triangle(approx, color_name))
                     elif shape == 4:
                         a = np.sqrt((box[0,0]-box[1,0])**2 + (box[0,1]-box[1,1])**2)
                         b = np.sqrt((box[1,0]-box[2,0])**2 + (box[1,1]-box[2,1])**2)
                         if np.abs(a-b) < 10:
-                            square = Shape.Square(approx)
+                            shapes.append(Shape.Square(approx, color_name))
                         else:
-                            rectangle = Shape.Rectangle(approx)
+                            shapes.append(Shape.Rectangle(approx, color_name))
                     elif shape > 6:
-                        circle = Shape.Circle(approx)
-                    else:
-                        print("no shape")           
+                        shapes.append(Shape.Circle(approx, color_name))
+        output = Visualisation.draw_contours(image, shapes)
+        return output
+
+                             
                 
             
