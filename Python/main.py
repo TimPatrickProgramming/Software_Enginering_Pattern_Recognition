@@ -14,11 +14,11 @@ config.read('Python/config.ini')
 colors = {"red": (0, 0, 255), "green": (0, 255, 0), "blue": (255, 0, 0), "yellow": (0, 255, 255), "purple": (255, 0, 255)}
 
 ranges = {
-    "red": ([int(x) for x in config['pattern_recognition']['lower_red'].strip('[]').split(',')],
+    "red":    ([int(x) for x in config['pattern_recognition']['lower_red'].strip('[]').split(',')],
                [int(x) for x in config['pattern_recognition']['upper_red'].strip('[]').split(',')]),
-    "green": ([int(x) for x in config['pattern_recognition']['lower_green'].strip('[]').split(',')],
+    "green":    ([int(x) for x in config['pattern_recognition']['lower_green'].strip('[]').split(',')],
                [int(x) for x in config['pattern_recognition']['upper_green'].strip('[]').split(',')]),
-    "blue": ([int(x) for x in config['pattern_recognition']['lower_blue'].strip('[]').split(',')],
+    "blue":   ([int(x) for x in config['pattern_recognition']['lower_blue'].strip('[]').split(',')],
                [int(x) for x in config['pattern_recognition']['upper_blue'].strip('[]').split(',')]),
     "yellow": ([int(x) for x in config['pattern_recognition']['lower_yellow'].strip('[]').split(',')],
                [int(x) for x in config['pattern_recognition']['upper_yellow'].strip('[]').split(',')]),
