@@ -7,6 +7,7 @@ import os
 
 import Image_Loader as Image_Loader
 import Image_Processing as Image_Processing
+import Logger as Logger
 
 config = configparser.ConfigParser()
 config.read('Python/config.ini')
@@ -14,9 +15,11 @@ config.read('Python/config.ini')
 colors = {"red": (0, 0, 255), "green": (0, 255, 0), "blue": (255, 0, 0), "yellow": (0, 255, 255), "purple": (255, 0, 255)}
 
 ranges = {
-    "red":    ([int(x) for x in config['pattern_recognition']['lower_red'].strip('[]').split(',')],
-               [int(x) for x in config['pattern_recognition']['upper_red'].strip('[]').split(',')]),
-    "green":    ([int(x) for x in config['pattern_recognition']['lower_green'].strip('[]').split(',')],
+    "red1":   ([int(x) for x in config['pattern_recognition']['lower_red1'].strip('[]').split(',')],
+               [int(x) for x in config['pattern_recognition']['upper_red1'].strip('[]').split(',')]),
+    "red2":   ([int(x) for x in config['pattern_recognition']['lower_red2'].strip('[]').split(',')],
+               [int(x) for x in config['pattern_recognition']['upper_red2'].strip('[]').split(',')]),
+    "green":  ([int(x) for x in config['pattern_recognition']['lower_green'].strip('[]').split(',')],
                [int(x) for x in config['pattern_recognition']['upper_green'].strip('[]').split(',')]),
     "blue":   ([int(x) for x in config['pattern_recognition']['lower_blue'].strip('[]').split(',')],
                [int(x) for x in config['pattern_recognition']['upper_blue'].strip('[]').split(',')]),
@@ -31,7 +34,8 @@ images = image_loader.load_folder_images()
 image_processor = Image_Processing.Image_Processing(colors, ranges)
 
 for image in images:
-    image = image_processor.process_images(image)
-
+    image, shapes = image_processor.process_images(image)
+    logger = Logger.Logger(config['logging']['path'])
+    logger.log_detection(shapes)
     cv2.imshow('Image', image)
     cv2.waitKey(0)

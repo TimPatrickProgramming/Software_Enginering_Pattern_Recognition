@@ -18,7 +18,7 @@ class Image_Processing:
             mask = cv2.inRange(hsvFrame, lower_np, upper_np)
 
             # detect contours / shapes
-            contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            contours, hierarchy = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
             for contour in contours:
                 approx = cv2.approxPolyDP(contour,0.04*cv2.arcLength(contour,True),True)
                 shape = len(approx)
@@ -43,4 +43,4 @@ class Image_Processing:
                         shapes.append(Shape.Circle(approx, color_name))
         visualisation = Visualisation.Visualisation()
         output = visualisation.draw_contours(image, shapes)
-        return output
+        return output, shapes
