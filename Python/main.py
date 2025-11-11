@@ -29,13 +29,18 @@ ranges = {
                [int(x) for x in config['pattern_recognition']['upper_purple'].strip('[]').split(',')])
 }
 
-image_loader = Image_Loader.Image_Loader(config['settings']['picture_path'])
-images = image_loader.load_folder_images()
-image_processor = Image_Processing.Image_Processing(colors, ranges)
+image_loader = Image_Loader.Image_Loader(config['settings']['picture_path'], int(config['settings']['camera_index']))
+while True:
+    print(config['settings']['mode'])
+    if config['settings']['mode'] == 'camera':
+        images = [image_loader.load_camera_image()]
+    else:
+        images = image_loader.load_folder_images()
+    image_processor = Image_Processing.Image_Processing(colors, ranges)
 
-for image in images:
-    image, shapes = image_processor.process_images(image)
-    logger = Logger.Logger(config['logging']['path'])
-    logger.log_detection(shapes)
-    cv2.imshow('Image', image)
-    cv2.waitKey(0)
+    for image in images:
+        image, shapes = image_processor.process_images(image)
+        logger = Logger.Logger(config['logging']['path'])
+        logger.log_detection(shapes)
+        cv2.imshow('Image', image)
+        cv2.waitKey(0)

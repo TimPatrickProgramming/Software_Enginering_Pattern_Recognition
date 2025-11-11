@@ -28,7 +28,8 @@ class Image_Processing:
                     # Get the minimum area rectangle
                     rect = cv2.minAreaRect(contour)
                     box = cv2.boxPoints(rect)     # Get 4 corner points
-                    box = np.int0(box)            # Convert to int
+                    #box = np.int0(box)            # Convert to int
+                    box = box.astype(int)
                     # Initialize shape_selector
                     if shape == 3:
                         shapes.append(Shape.Triangle(approx, color_name))
