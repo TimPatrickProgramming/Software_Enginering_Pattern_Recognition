@@ -31,6 +31,7 @@ ranges = {
 
 image_loader = Image_Loader.Image_Loader(config['settings']['picture_path'], int(config['settings']['camera_index']))
 image_processor = Image_Processing.Image_Processing(colors, ranges)
+logger = Logger.Logger(config['logging']['path'])
 
 while True:
     selected_mode = config['settings']['mode']
@@ -48,9 +49,8 @@ while True:
     if selected_mode == 'camera':
         print("Starting camera mode. Press 'q' to quit.")
         while True:
-            images = [image_loader.load_camera_image()]
+            image = image_loader.load_camera_image()
             image, shapes = image_processor.process_images(image)
-            logger = Logger.Logger(config['logging']['path'])
             logger.log_detection(shapes)
             cv2.imshow('Image', image)
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -61,7 +61,6 @@ while True:
 
         for image in images:
             image, shapes = image_processor.process_images(image)
-            logger = Logger.Logger(config['logging']['path'])
             logger.log_detection(shapes)
             cv2.imshow('Image', image)
             cv2.waitKey(0)
