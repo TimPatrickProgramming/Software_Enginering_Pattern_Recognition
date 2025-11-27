@@ -30,17 +30,39 @@ ranges = {
 }
 
 image_loader = Image_Loader.Image_Loader(config['settings']['picture_path'], int(config['settings']['camera_index']))
-while True:
-    print(config['settings']['mode'])
-    if config['settings']['mode'] == 'camera':
-        images = [image_loader.load_camera_image()]
-    else:
-        images = image_loader.load_folder_images()
-    image_processor = Image_Processing.Image_Processing(colors, ranges)
+image_processor = Image_Processing.Image_Processing(colors, ranges)
 
-    for image in images:
-        image, shapes = image_processor.process_images(image)
-        logger = Logger.Logger(config['logging']['path'])
-        logger.log_detection(shapes)
-        cv2.imshow('Image', image)
-        cv2.waitKey(0)
+while True:
+    selected_mode = config['settings']['mode']
+    print("Which mode do want to select:\n[0] Default\n[1] Image\n[2] Camera")
+    selection = int(input())
+    if selection == 0:
+        pass
+    elif selection == 1:
+        selected_mode = 'image'
+    elif selection == 2:
+        selected_mode = 'camera'
+    else:
+        print("Invalid selection, defaulting to 'image' mode.")
+    
+    if selected_mode == 'camera':
+        print("Starting camera mode. Press 'q' to quit.")
+        while True:
+            images = [image_loader.load_camera_image()]
+            image, shapes = image_processor.process_images(image)
+            logger = Logger.Logger(config['logging']['path'])
+            logger.log_detection(shapes)
+            cv2.imshow('Image', image)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+    else:
+        print("Starting image mode. Press any key to proceed through images.")
+        images = image_loader.load_folder_images()
+
+        for image in images:
+            image, shapes = image_processor.process_images(image)
+            logger = Logger.Logger(config['logging']['path'])
+            logger.log_detection(shapes)
+            cv2.imshow('Image', image)
+            cv2.waitKey(0)
+    cv2.destroyAllWindows() 
