@@ -16,7 +16,8 @@ class Image_Processing:
             lower_np = np.array(lower, np.uint8)
             upper_np = np.array(upper, np.uint8)
             mask = cv2.inRange(hsvFrame, lower_np, upper_np)
-
+            if color_name.startswith("red"):
+                color_name = "red"
             # detect contours / shapes
             contours, hierarchy = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
             for contour in contours:
