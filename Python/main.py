@@ -52,6 +52,26 @@ class ShapeDetectorApp(QWidget):
     def setup_ui(self):
         main_layout = QVBoxLayout(self)
 
+        control_layout = QHBoxLayout()
+        
+        self.radio_camera = QRadioButton("Camera Mode")
+        self.radio_camera.setChecked(True)
+        self.radio_camera.toggled.connect(self.check_mode_change)
+        
+        self.radio_image = QRadioButton("Image Folder Mode")
+        self.radio_image.toggled.connect(self.check_mode_change)
+        
+        control_layout.addWidget(self.radio_camera)
+        control_layout.addWidget(self.radio_image)
+
+        self.next_button = QPushButton("Next Image >>")
+        self.next_button.clicked.connect(self.load_next_image)
+        self.next_button.setEnabled(False)
+        
+        control_layout.addWidget(self.next_button)
+
+        main_layout.addLayout(control_layout)
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = ShapeDetectorApp()
