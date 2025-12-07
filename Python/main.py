@@ -1,9 +1,10 @@
 import configparser
 import numpy as np
 import cv2
-import datetime
-import csv
-import os
+import sys
+from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QRadioButton, QLabel, QMessageBox, QFileDialog)
+from PyQt6.QtGui import QImage, QPixmap
+from PyQt6.QtCore import QTimer, Qt
 
 import Image_Loader as Image_Loader
 import Image_Processing as Image_Processing
@@ -33,35 +34,59 @@ image_loader = Image_Loader.Image_Loader(config['settings']['picture_path'], int
 image_processor = Image_Processing.Image_Processing(colors, ranges)
 logger = Logger.Logger(config['logging']['path'])
 
-while True:
-    selected_mode = config['settings']['mode']
-    print("Which mode do want to select:\n[0] Default\n[1] Image\n[2] Camera")
-    selection = int(input())
-    if selection == 0:
-        pass
-    elif selection == 1:
-        selected_mode = 'image'
-    elif selection == 2:
-        selected_mode = 'camera'
-    else:
-        print("Invalid selection, defaulting to 'image' mode.")
-    
-    if selected_mode == 'camera':
-        print("Starting camera mode. Press 'q' to quit.")
-        while True:
-            image = image_loader.load_camera_image()
-            image, shapes = image_processor.process_images(image)
-            logger.log_detection(shapes)
-            cv2.imshow('Image', image)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-    else:
-        print("Starting image mode. Press any key to proceed through images.")
-        images = image_loader.load_folder_images()
+class ShapeDetectorApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Object Pattern Recognizer")
+        
+        self.image_files = image_loader.load_folder_images()
+        self.current_image_index = 0
+        self.current_mode = 'image'
 
-        for image in images:
-            image, shapes = image_processor.process_images(image)
-            logger.log_detection(shapes)
-            cv2.imshow('Image', image)
-            cv2.waitKey(0)
-    cv2.destroyAllWindows() 
+        self.setup_ui()
+        
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_camera_frame)
+        self.start_camera_mode()
+
+    def setup_ui(self):
+        main_layout = QVBoxLayout(self)
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = ShapeDetectorApp()
+    window.show()
+    sys.exit(app.exec())
+
+# while True:
+#     selected_mode = config['settings']['mode']
+#     print("Which mode do want to select:\n[0] Default\n[1] Image\n[2] Camera")
+#     selection = int(input())
+#     if selection == 0:
+#         pass
+#     elif selection == 1:
+#         selected_mode = 'image'
+#     elif selection == 2:
+#         selected_mode = 'camera'
+#     else:
+#         print("Invalid selection, defaulting to 'image' mode.")
+    
+#     if selected_mode == 'camera':
+#         print("Starting camera mode. Press 'q' to quit.")
+#         while True:
+#             image = image_loader.load_camera_image()
+#             image, shapes = image_processor.process_images(image)
+#             logger.log_detection(shapes)
+#             cv2.imshow('Image', image)
+#             if cv2.waitKey(1) & 0xFF == ord('q'):
+#                 break
+#     else:
+#         print("Starting image mode. Press any key to proceed through images.")
+#         images = image_loader.load_folder_images()
+
+#         for image in images:
+#             image, shapes = image_processor.process_images(image)
+#             logger.log_detection(shapes)
+#             cv2.imshow('Image', image)
+#             cv2.waitKey(0)
+#     cv2.destroyAllWindows() 
