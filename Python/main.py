@@ -91,16 +91,41 @@ class ShapeDetectorApp(QWidget):
             self.start_image_mode()
 
     def start_camera_mode(self):
-        pass
+        if self.timer.isActive():
+            self.timer.stop()
+        self.timer.start(30)
 
     def start_image_mode(self):
-        pass
+        if self.timer.isActive():
+            self.timer.stop()
+        self.current_image_index = 0
+        self.load_current_image()
+
+    def load_current_image(self):
+        if not self.image_files:
+            self.image_label.setText("No images found in the configured folder.")
+            self.next_button.setEnabled(False)
+            return
+
+        if self.current_image_index < len(self.image_files):
+            image = self.image_files[self.current_image_index].copy() 
+            self.process_and_display(image)
+        else:
+            QMessageBox.information(self, "Info", "Reached the end of the image folder. Restarting loop.")
+            self.current_image_index = 0 
+            self.load_current_image() 
 
     def load_next_image(self):
-        pass
+        self.current_image_index = (self.current_image_index + 1) % len(self.image_files)
+        self.load_current_image()
 
     def update_camera_frame(self):
-        pass
+        if self.current_mode == 'camera':
+            image = image_loader.load_camera_image()
+            if image is not None:
+                self.process_and_display(image)
+        else:
+            self.timer.stop()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
