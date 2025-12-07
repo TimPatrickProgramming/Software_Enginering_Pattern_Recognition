@@ -72,6 +72,36 @@ class ShapeDetectorApp(QWidget):
 
         main_layout.addLayout(control_layout)
 
+    def check_mode_change(self):
+        if self.radio_camera.isChecked() and self.current_mode != 'camera':
+            self.switch_mode('camera')
+        elif self.radio_image.isChecked() and self.current_mode != 'image':
+            self.switch_mode('image')
+
+    def switch_mode(self, mode):
+        self.current_mode = mode
+        
+        # Enable/Disable controls based on mode
+        self.next_button.setEnabled(mode == 'image')
+        self.folder_button.setEnabled(mode == 'image')
+        
+        if mode == 'camera':
+            self.start_camera_mode()
+        elif mode == 'image':
+            self.start_image_mode()
+
+    def start_camera_mode(self):
+        pass
+
+    def start_image_mode(self):
+        pass
+
+    def load_next_image(self):
+        pass
+
+    def update_camera_frame(self):
+        pass
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = ShapeDetectorApp()
