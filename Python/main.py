@@ -41,7 +41,7 @@ class ShapeDetectorApp(QWidget):
         
         self.image_files = image_loader.load_folder_images()
         self.current_image_index = 0
-        self.current_mode = 'image'
+        self.current_mode = 'camera'
 
         self.setup_ui()
         
