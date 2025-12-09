@@ -89,7 +89,7 @@ class ShapeDetectorApp(QWidget):
         
         # Enable/Disable controls based on mode
         self.next_button.setEnabled(mode == 'image')
-        self.folder_button.setEnabled(mode == 'image')
+        #self.folder_button.setEnabled(mode == 'image')
         
         if mode == 'camera':
             self.start_camera_mode()
@@ -138,11 +138,17 @@ class ShapeDetectorApp(QWidget):
         logger.log_detection(shapes)
         rgb_image = cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB)
 
-        height, width, channel = processed_image.shape
+        height, width, channel = rgb_image.shape
         bytes_per_line = 3 * width
-        q_img = QImage(processed_image.data, width, height, bytes_per_line, QImage.Format.Format_RGB888).rgbSwapped()
-        pixmap = QPixmap.fromImage(q_img)
+        qt_image = QImage(rgb_image.data, width, height, bytes_per_line, QImage.Format.Format_RGB888).rgbSwapped()
+        pixmap = QPixmap.fromImage(qt_image)
         self.image_label.setPixmap(pixmap.scaled(self.image_label.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+
+    def closeEvent(self, event):
+        if self.timer.isActive():
+            self.timer.stop()
+        image_loader.release_camera()
+        event.accept()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
