@@ -72,6 +72,12 @@ class ShapeDetectorApp(QWidget):
 
         main_layout.addLayout(control_layout)
 
+        self.image_label = QLabel("Waiting for camera/image data...")
+        self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter) 
+        self.image_label.setMinimumSize(640, 480) 
+        
+        main_layout.addWidget(self.image_label)
+
     def check_mode_change(self):
         if self.radio_camera.isChecked() and self.current_mode != 'camera':
             self.switch_mode('camera')
@@ -126,6 +132,17 @@ class ShapeDetectorApp(QWidget):
                 self.process_and_display(image)
         else:
             self.timer.stop()
+
+    def process_and_display(self, image):
+        processed_image, shapes = image_processor.process_images(image)
+        logger.log_detection(shapes)
+        rgb_image = cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB)
+
+        height, width, channel = processed_image.shape
+        bytes_per_line = 3 * width
+        q_img = QImage(processed_image.data, width, height, bytes_per_line, QImage.Format.Format_RGB888).rgbSwapped()
+        pixmap = QPixmap.fromImage(q_img)
+        self.image_label.setPixmap(pixmap.scaled(self.image_label.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
