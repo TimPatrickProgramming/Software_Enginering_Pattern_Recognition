@@ -8,11 +8,14 @@ class Image_Loader:
 
     def load_folder_images(self):
         images = []
-        for filename in os.listdir(self.image_path):
+        if not os.path.isdir(self.image_path):
+            return []
+        for filename in sorted(os.listdir(self.image_path)):
             img_path = os.path.join(self.image_path, filename)
-            img = cv2.imread(img_path)
-            if img is not None:
-                images.append(img)
+            if os.path.isfile(img_path) and filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+                img = cv2.imread(img_path)
+                if img is not None:
+                    images.append(img)
         return images
     
     def load_camera_image(self):
@@ -21,3 +24,7 @@ class Image_Loader:
             return frame
         else:
             return None
+    
+    
+    def release_camera(self):
+        self.cam.release()
