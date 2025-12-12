@@ -64,6 +64,12 @@ class ShapeDetectorApp(QWidget):
         control_layout.addWidget(self.radio_camera)
         control_layout.addWidget(self.radio_image)
 
+        self.folder_button = QPushButton("Select Image Folder")
+        self.folder_button.clicked.connect(self.select_folder)
+        control_layout.addWidget(self.folder_button)
+        
+        control_layout.addStretch(1)
+
         self.next_button = QPushButton("Next Image >>")
         self.next_button.clicked.connect(self.load_next_image)
         self.next_button.setEnabled(False)
@@ -78,6 +84,23 @@ class ShapeDetectorApp(QWidget):
         
         main_layout.addWidget(self.image_label)
 
+    def select_folder(self):        
+        current_path = image_loader.image_path
+        
+        new_path = QFileDialog.getExistingDirectory(self, "Select directory to load images from", current_path)
+        
+        if new_path:
+            image_loader.image_path = new_path
+            
+            self.image_files = image_loader.load_folder_images()
+            self.current_image_index = 0
+            
+            QMessageBox.information(self, "Folder Updated", 
+                                    f"New folder selected: {new_path}\n{len(self.image_files)} images loaded.")
+
+            if self.current_mode == 'image':
+                self.load_current_image()
+
     def check_mode_change(self):
         if self.radio_camera.isChecked() and self.current_mode != 'camera':
             self.switch_mode('camera')
@@ -89,7 +112,7 @@ class ShapeDetectorApp(QWidget):
         
         # Enable/Disable controls based on mode
         self.next_button.setEnabled(mode == 'image')
-        #self.folder_button.setEnabled(mode == 'image')
+        self.folder_button.setEnabled(mode == 'image')
         
         if mode == 'camera':
             self.start_camera_mode()
