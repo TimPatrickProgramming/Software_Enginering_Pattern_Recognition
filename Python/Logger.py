@@ -25,7 +25,8 @@ class Logger:
         """
         now = datetime.datetime.now()
         for shape in shapes:
-            data = [now, shape.__class__.__name__, shape.color_name]
+            class_name = shape.__class__.__name__.ljust(9, ' ')
+            data = [f"{now} | {class_name} | {shape.color_name}"]
             with open(self.log_path, 'a', newline='') as csvfile:
                 writer = csv.writer(csvfile, delimiter=',')
                 writer.writerow(data)
