@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
 import configparser
+from typing import List
 
-import Shape
+import Shape as Shape
 
 config = configparser.ConfigParser()
 config.read('Python/config.ini')
@@ -13,8 +14,21 @@ thickness = int(config['settings']['thickness'])
 text_color = eval(config['settings']['text_color'])
 
 class Visualisation:
+    """
+    Handles drawing contours and labels onto an image frame based on configuration settings.
+    """
     @staticmethod
-    def draw_contours(imageFrame, shapes):
+    def draw_contours(imageFrame: np.ndarray, shapes: List[Shape.Shape]) -> np.ndarray:
+        """
+        Draws the detected shape contours and labels onto the image frame.
+
+        Args:
+            imageFrame (np.ndarray): The source image frame (BGR).
+            shapes (List[Shape]): A list of detected Shape objects.
+
+        Returns:
+            np.ndarray: The image frame with contours and labels drawn.
+        """
         for shape in shapes:
             # Get min from first and second column
             min_x = np.min(shape.approx[:, 0])

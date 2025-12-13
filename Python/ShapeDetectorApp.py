@@ -2,11 +2,26 @@ import numpy as np
 import cv2
 
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QRadioButton, QLabel, QMessageBox, QFileDialog)
-from PyQt6.QtGui import QImage, QPixmap
+from PyQt6.QtGui import QImage, QPixmap, QCloseEvent
 from PyQt6.QtCore import QTimer, Qt
 
+from Image_Loader import Image_Loader
+from Image_Processing import Image_Processing
+from Logger import Logger
+
 class ShapeDetectorApp(QWidget):
-    def __init__(self, image_loader, image_processor, logger):
+    """
+    The main PyQt6 GUI window for displaying the processed images and managing modes.
+    """
+    def __init__(self, image_loader:Image_Loader, image_processor:Image_Processing, logger:Logger) -> None:
+        """
+        Initializes the GUI application window.
+
+        Args:
+            image_loader (Image_Loader): Instance of the Image_Loader class.
+            image_processor (Image_Processing): Instance of the Image_Processing class.
+            logger (Logger): Instance of the Logger class.
+        """
         super().__init__()
         self.image_loader = image_loader
         self.image_processor = image_processor
@@ -24,7 +39,7 @@ class ShapeDetectorApp(QWidget):
         self.timer.timeout.connect(self.update_camera_frame)
         self.start_camera_mode()
 
-    def setup_ui(self):
+    def setup_ui(self) -> None:
         main_layout = QVBoxLayout(self)
 
         control_layout = QHBoxLayout()
@@ -59,7 +74,8 @@ class ShapeDetectorApp(QWidget):
         
         main_layout.addWidget(self.image_label)
 
-    def select_folder(self):        
+    def select_folder(self) -> None:        
+        """Opens a QFileDialog to allow the user to select a new folder for image processing."""
         current_path = self.image_loader.image_path
         
         new_path = QFileDialog.getExistingDirectory(self, "Select directory to load images from", current_path)
@@ -76,13 +92,15 @@ class ShapeDetectorApp(QWidget):
             if self.current_mode == 'image':
                 self.load_current_image()
 
-    def check_mode_change(self):
+    def check_mode_change(self) -> None:
+        """Called when a radio button is clicked to initiate mode switch."""
         if self.radio_camera.isChecked() and self.current_mode != 'camera':
             self.switch_mode('camera')
         elif self.radio_image.isChecked() and self.current_mode != 'image':
             self.switch_mode('image')
 
-    def switch_mode(self, mode):
+    def switch_mode(self, mode:str) -> None:
+        """Manages the state change and enables/disables controls based on the new mode."""
         self.current_mode = mode
         
         # Enable/Disable controls based on mode
@@ -94,18 +112,21 @@ class ShapeDetectorApp(QWidget):
         elif mode == 'image':
             self.start_image_mode()
 
-    def start_camera_mode(self):
+    def start_camera_mode(self) -> None:
+        """Activates the QTimer to start streaming the camera feed."""
         if self.timer.isActive():
             self.timer.stop()
         self.timer.start(30)
 
-    def start_image_mode(self):
+    def start_image_mode(self) -> None:
+        """Stops the QTimer and prepares to display images from the folder."""
         if self.timer.isActive():
             self.timer.stop()
         self.current_image_index = 0
         self.load_current_image()
 
-    def load_current_image(self):
+    def load_current_image(self) -> None:
+        """Loads, processes, and displays the image at the current index."""
         if not self.image_files:
             self.image_label.setText("No images found in the configured folder.")
             self.next_button.setEnabled(False)
@@ -119,11 +140,13 @@ class ShapeDetectorApp(QWidget):
             self.current_image_index = 0 
             self.load_current_image() 
 
-    def load_next_image(self):
+    def load_next_image(self) -> None:
+        """Increments the image index and loads the next image (loops back to 0)."""
         self.current_image_index = (self.current_image_index + 1) % len(self.image_files)
         self.load_current_image()
 
-    def update_camera_frame(self):
+    def update_camera_frame(self) -> None:
+        """Called by QTimer to grab, process, and display a new camera frame."""
         if self.current_mode == 'camera':
             image = self.image_loader.load_camera_image()
             if image is not None:
@@ -131,8 +154,9 @@ class ShapeDetectorApp(QWidget):
         else:
             self.timer.stop()
 
-    def process_and_display(self, image):
-        processed_image, shapes = self.image_processor.process_images(image)
+    def process_and_display(self, image:np.ndarray) -> None:
+        """Processes the OpenCV image and converts it for display in the QLabel."""
+        processed_image, shapes = self.image_processor.process_image(image)
         self.logger.log_detection(shapes)
         rgb_image = cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB)
         height, width, channel = rgb_image.shape
@@ -141,7 +165,8 @@ class ShapeDetectorApp(QWidget):
         pixmap = QPixmap.fromImage(qt_image)
         self.image_label.setPixmap(pixmap.scaled(self.image_label.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
 
-    def closeEvent(self, event):
+    def closeEvent(self, event:QCloseEvent) -> None:
+        """Ensures the camera is released when the application is closed."""
         if self.timer.isActive():
             self.timer.stop()
         self.image_loader.release_camera()

@@ -1,15 +1,38 @@
 import numpy as np
 import cv2
+from typing import Dict, Tuple, List, Any
 
 import Shape as Shape
 import Visualisation as Visualisation
 
 class Image_Processing:
-    def __init__(self, colors, ranges):
+    """
+    Contains the logic for image segmentation (color filtering) and geometric
+    shape detection (contour analysis).
+    """
+    def __init__(self, colors:Dict[str, Tuple[int, int, int]], ranges:Dict[str, Tuple[List[int], List[int]]]) -> None:
+        """
+        Initializes the Image_Processing component.
+
+        Args:
+            colors (Dict[str, Tuple[int, int, int]]): Dictionary mapping color names to BGR tuples.
+            ranges (Dict[str, Tuple[List[int], List[int]]]): Dictionary mapping HSV range keys (e.g., 'green') to (lower_hsv, upper_hsv) tuples.
+        """
         self.colors = colors
         self.ranges = ranges
 
-    def process_images(self, image):
+    def process_image(self, image: np.ndarray) -> Tuple[np.ndarray, List[Shape.Shape]]:
+        """
+        Converts the image to HSV, applies color masks, finds contours, classifies shapes,
+        and draws results.
+
+        Args:
+            image (np.ndarray): The input BGR image frame.
+
+        Returns:
+            Tuple[np.ndarray, List[Shape]]: (output_image, shapes), where output_image is the image with contours
+                   drawn, and shapes is a list of detected Shape objects.
+        """
         hsvFrame = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         shapes = []
         for color_name, (lower, upper) in self.ranges.items():
@@ -44,5 +67,5 @@ class Image_Processing:
                     elif shape > 6:
                         shapes.append(Shape.Circle(approx, color_name))
         visualisation = Visualisation.Visualisation()
-        output = visualisation.draw_contours(image, shapes)
-        return output, shapes
+        output_image = visualisation.draw_contours(image, shapes)
+        return output_image, shapes

@@ -34,13 +34,17 @@ image_loader = Image_Loader.Image_Loader(config['settings']['picture_path'], int
 image_processor = Image_Processing.Image_Processing(colors, ranges)
 logger = Logger.Logger(config['logging']['path'])
 
-def run_console_mode(selected_input_mode):
+def run_console_mode(selected_input_mode:str) -> None:
+    """
+    Runs the console-based mode with OpenCV windows. 
+    It loops through camera or image mode until the user selects 'Quit'.
+    """
     while True:               
         if selected_input_mode == 'camera':
             print("Starting camera mode. Press 'q' to quit.")
             while True:
                 image = image_loader.load_camera_image()
-                image, shapes = image_processor.process_images(image)
+                image, shapes = image_processor.process_image(image)
                 logger.log_detection(shapes)
                 cv2.imshow('Image', image)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -50,7 +54,7 @@ def run_console_mode(selected_input_mode):
             images = image_loader.load_folder_images()
 
             for image in images:
-                image, shapes = image_processor.process_images(image)
+                image, shapes = image_processor.process_image(image)
                 logger.log_detection(shapes)
                 cv2.imshow('Image', image)
                 cv2.waitKey(0)
@@ -69,6 +73,7 @@ def run_console_mode(selected_input_mode):
             break
         else:
             print("Invalid selection, defaulting to 'image' mode.")
+            selected_input_mode = config['settings']['mode']
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:

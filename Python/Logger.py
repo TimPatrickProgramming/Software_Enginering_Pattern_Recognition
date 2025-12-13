@@ -3,10 +3,26 @@ import os
 import datetime
 
 class Logger:
-    def __init__(self, log_path):
+    """
+    Handles logging of detected shapes (type and color) to a CSV file.
+    """
+    def __init__(self, log_path:str) -> None:
+        """
+        Initializes the Logger with the target log file path.
+
+        Args:
+            log_path (str): The path to the CSV file where detection data will be logged.
+        """
         self.log_path = log_path
 
-    def log_detection(self, shapes):
+    def log_detection(self, shapes:list) -> None:
+        """
+        Writes the timestamp, shape type, and color name for each detected shape
+        to the configured CSV log file.
+
+        Args:
+            shapes (list): A list of Shape objects detected in the current frame/image.
+        """
         now = datetime.datetime.now()
         for shape in shapes:
             data = [now, shape.__class__.__name__, shape.color_name]
