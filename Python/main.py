@@ -62,7 +62,11 @@ def run_console_mode(selected_input_mode:str) -> None:
         cv2.destroyAllWindows() 
         
         print("Which mode do want to select:\n[0] Default\n[1] Image\n[2] Camera\n[3] Quit")
-        selection = int(input())
+        try:
+            selection: int = int(input())
+        except ValueError:
+            selection = -1
+            
         if selection == 0:
             pass
         elif selection == 1:

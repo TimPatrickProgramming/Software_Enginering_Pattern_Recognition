@@ -18,6 +18,10 @@ class Image_Loader:
         self.image_path = image_path
         self.cam = cv2.VideoCapture(select_camera)
 
+        # Check if the camera was successfully opened
+        if not self.cam.isOpened():
+            raise IOError(f"Cannot open camera with index {select_camera}. Check device availability or index.")
+
     def load_folder_images(self) -> list[np.ndarray]:
         """
         Loads all image files (png, jpg, jpeg) from the configured folder path.
@@ -43,12 +47,16 @@ class Image_Loader:
         Returns:
             numpy.ndarray or None: The captured frame or None if capture failed.
         """
-        ret, frame = self.cam.read()
-        if ret:
-            return frame
-        else:
+        try:
+            ret, frame = self.cam.read()
+            if ret:
+                return frame
+            else:
+                print("Warning: Camera read failed (end of stream or device error).")
+                return None
+        except Exception as e:
+            print(f"Error during camera frame capture: {e}")
             return None
-    
     
     def release_camera(self) -> None:
         """
