@@ -8,6 +8,7 @@
 - [Configuration](#configuration)
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
+  - [C4 Model - Context & Container Diagrams](#c4-model---context--container-diagrams)
   - [Static View - Class Diagram](#static-view---class-diagram)
   - [Dynamic View - Sequence Diagram](#dynamic-view---sequence-diagram)
 
@@ -140,6 +141,34 @@ Software_Enginering_Pattern_Recognition/
 The architecture of this pattern recognition system follows object-oriented design principles with clear separation of concerns. The application is structured into distinct layers: data acquisition (Image_Loader), processing logic (Image_Processing, Visualisation), data models (Shape hierarchy), persistence (Logger), and presentation (ShapeDetectorApp for GUI, main.py for console mode).
 
 This modular architecture enables flexibility in input sources (camera or folder), processing pipelines, and output modes (GUI or console), while maintaining a clean dependency structure where each component has a well-defined responsibility.
+
+### C4 Model - Context & Container Diagrams
+
+#### System Context Diagram
+
+The System Context diagram shows the Pattern Recognition Application and its interactions with users and external systems.
+
+```mermaid
+graph TB
+    User[User<br/>Uses the application for<br/>pattern and color detection]
+    
+    System[Pattern Recognition System<br/>Python Application<br/>Detects shapes and colors<br/>from images or camera feed]
+    
+    Camera[Camera/Webcam<br/>External System<br/>Provides live video feed]
+    
+    FileSystem[File System<br/>External System<br/>Stores images, configuration,<br/>and detection logs]
+    
+    User -->|Interacts via GUI<br/>or Console| System
+    System -->|Reads frames from| Camera
+    System -->|Reads images from<br/>Writes logs to<br/>Reads config from| FileSystem
+    
+    style System fill:#1168bd,stroke:#0b4884,color:#ffffff
+    style User fill:#08427b,stroke:#052e56,color:#ffffff
+    style Camera fill:#999999,stroke:#6b6b6b,color:#ffffff
+    style FileSystem fill:#999999,stroke:#6b6b6b,color:#ffffff
+```
+
+
 
 ### Static View - Class Diagram
 
