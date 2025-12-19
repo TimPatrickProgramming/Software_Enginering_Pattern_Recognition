@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QRadioButton, QLabel, QMessageBox, QFileDialog)
-from PyQt6.QtGui import QImage, QPixmap, QCloseEvent
+from PyQt6.QtGui import QImage, QPixmap, QCloseEvent, QScreen
 from PyQt6.QtCore import QTimer, Qt
 
 from Image_Loader import Image_Loader
@@ -26,6 +26,17 @@ class ShapeDetectorApp(QWidget):
         self.image_loader = image_loader
         self.image_processor = image_processor
         self.logger = logger
+
+        try:
+            screen = QApplication.primaryScreen()
+            screen_geometry = screen.geometry()
+            
+            default_width = int(screen_geometry.width() * 0.75)
+            default_height = int(screen_geometry.height() * 0.85)
+            
+            self.resize(default_width, default_height)
+        except Exception:
+            self.resize(1000, 800)
 
         self.setWindowTitle("Object Pattern Recognizer")
         
