@@ -40,6 +40,28 @@ For the project setup, a virtual environment needs to be created. Follow the ste
 
 ```mermaid
 classDiagram
+    class Shape {
+        <<abstract>>
+        +approx: ApproxType
+        +color_name: str
+        +__init__(approx, color_name)
+    }
+    
+    class Triangle {
+        +__init__(approx, color_name)
+    }
+    
+    class Rectangle {
+        +__init__(approx, color_name)
+    }
+    
+    class Square {
+        +__init__(approx, color_name)
+    }
+    
+    class Circle {
+        +__init__(approx, color_name)
+    }
     
     class Image_Loader {
         -image_path: str
@@ -63,6 +85,10 @@ classDiagram
         +log_detection(shapes)
     }
     
+    class Visualisation {
+        +draw_contours(imageFrame, shapes)$ ndarray
+    }
+    
     class ShapeDetectorApp {
         -image_loader: Image_Loader
         -image_processor: Image_Processing
@@ -84,5 +110,17 @@ classDiagram
         +process_and_display(image)
         +closeEvent(event)
     }
+    
+    Shape <|-- Triangle
+    Shape <|-- Rectangle
+    Shape <|-- Square
+    Shape <|-- Circle
+    
+    Image_Processing --> Shape : creates
+    Image_Processing --> Visualisation : uses
+    ShapeDetectorApp --> Image_Loader : uses
+    ShapeDetectorApp --> Image_Processing : uses
+    ShapeDetectorApp --> Logger : uses
+    Logger --> Shape : logs
 ```
 
