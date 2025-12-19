@@ -40,6 +40,29 @@ For the project setup, a virtual environment needs to be created. Follow the ste
 
 ```mermaid
 classDiagram
+    
+    class Image_Loader {
+        -image_path: str
+        -cam: VideoCapture
+        +__init__(image_path, select_camera)
+        +load_folder_images() List~ndarray~
+        +load_camera_image() ndarray
+        +release_camera()
+    }
+    
+    class Image_Processing {
+        -colors: Dict
+        -ranges: Dict
+        +__init__(colors, ranges)
+        +process_image(image) Tuple~ndarray, List~Shape~~
+    }
+    
+    class Logger {
+        -log_path: str
+        +__init__(log_path)
+        +log_detection(shapes)
+    }
+    
     class ShapeDetectorApp {
         -image_loader: Image_Loader
         -image_processor: Image_Processing
