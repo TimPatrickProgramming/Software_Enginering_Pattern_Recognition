@@ -39,8 +39,7 @@ The project requires the following key libraries (all listed in [requirements.tx
 - **opencv-python** (4.12.0.88): Core computer vision functionality for image processing and contour detection
 - **PyQt6**: GUI framework for the interactive application interface
 - **numpy** (2.3.4): Numerical operations and array manipulations
-- **torch** (2.9.0): Deep learning framework (for potential future extensions)
-- **scipy**, **scikit-learn**: Scientific computing and machine learning utilities
+
 
 ### Hardware Requirements
 
