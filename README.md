@@ -33,6 +33,37 @@ For the project setup, a virtual environment needs to be created. Follow the ste
 6. To deactivate the venv, enter the following command in the terminal
     - `deactivate`
 
+## Project Structure
+
+The project follows a modular structure with clear separation of concerns:
+
+```
+Software_Enginering_Pattern_Recognition/
+│
+├── Python/                      # Main source code directory
+│   ├── main.py                  # Application entry point - handles mode selection and initialization
+│   ├── ShapeDetectorApp.py      # PyQt6 GUI application class
+│   ├── Image_Loader.py          # Handles image acquisition from camera or folder
+│   ├── Image_Processing.py      # Core vision processing - HSV conversion, contour detection, shape classification
+│   ├── Shape.py                 # Shape data model hierarchy (Triangle, Rectangle, Square, Circle)
+│   ├── Visualisation.py         # Rendering utilities for drawing contours and labels
+│   ├── Logger.py                # CSV logging functionality for detection results
+│   └── config.ini               # Configuration file for color ranges and system settings
+│
+├── Documents/                   # Project documentation and reports
+├── Pictures/                    # Sample images for testing and demonstration
+│
+├── requirements.txt             # Python dependencies specification
+├── README.md                    # Project documentation (this file)
+└── .gitignore                   # Git ignore rules
+```
+
+### Key Files Description
+
+- **[main.py](Python/main.py)**: Orchestrates application startup, reads configuration, and delegates to either GUI or console mode
+- **[config.ini](Python/config.ini)**: Defines HSV color ranges for detection and system parameters (camera index, log path, default modes)
+- **[requirements.txt](requirements.txt)**: Lists all Python package dependencies with version specifications
+
 
 ## Architecture
 
@@ -147,6 +178,14 @@ classDiagram
 The architecture maintains a unidirectional dependency flow: ShapeDetectorApp orchestrates Image_Loader, Image_Processing, and Logger; Image_Processing creates Shape instances and utilizes Visualisation for rendering; Logger references Shape objects for persistence.
 
 ### Dynamic View - Sequence Diagram
+
+The sequence diagram illustrates the runtime behavior of the application in both GUI and console modes. The flow begins with initialization where the main module reads configuration settings and instantiates the core components (Image_Loader, Image_Processing, Logger).
+
+In **GUI mode**, the ShapeDetectorApp orchestrates continuous processing loops that acquire images (from camera or folder), pass them through the image processing pipeline, and display results. The Image_Processing component performs the core computer vision workflow: HSV conversion, color-based masking, contour detection, polygon approximation, and shape classification. For each detected shape meeting the area threshold, appropriate Shape objects are instantiated. The Visualisation utility then annotates the image with bounding contours and labels before display.
+
+In **console mode**, the main module directly manages the processing loop and uses OpenCV windows for display instead of a GUI framework.
+
+Both modes follow the same core processing pipeline and log all detections to CSV through the Logger component, ensuring consistent behavior regardless of interface choice.
 
 ```mermaid
 sequenceDiagram
