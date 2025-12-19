@@ -34,3 +34,32 @@ For the project setup, a virtual environment needs to be created. Follow the ste
     - `deactivate`
 
 
+## Architecture
+
+### Static View - Class Diagram
+
+```mermaid
+classDiagram
+    class ShapeDetectorApp {
+        -image_loader: Image_Loader
+        -image_processor: Image_Processing
+        -logger: Logger
+        -timer: QTimer
+        -current_mode: str
+        -image_files: List~ndarray~
+        -current_image_index: int
+        +__init__(image_loader, image_processor, logger)
+        +setup_ui()
+        +select_folder()
+        +check_mode_change()
+        +switch_mode(mode)
+        +start_camera_mode()
+        +start_image_mode()
+        +load_current_image()
+        +load_next_image()
+        +update_camera_frame()
+        +process_and_display(image)
+        +closeEvent(event)
+    }
+```
+
