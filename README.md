@@ -5,6 +5,7 @@
 - [Purpose of this Project](#purpose-of-this-project)
 - [System Requirements](#system-requirements)
 - [Project Setup](#project-setup)
+- [Configuration](#configuration)
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
   - [Static View - Class Diagram](#static-view---class-diagram)
@@ -59,13 +60,49 @@ For the project setup, a virtual environment needs to be created. Follow the ste
     - `virtualbox\Scripts\activate` (Windows)
 4. Install the required libraries from requirements.txt
     - `pip install -r requirements.txt`
-5. Now you are ready to start the project by executing main.py
-    - `python main.py`
+5. Configure the application settings in [config.ini](Python/config.ini) (see [Configuration](#configuration) section below)
+6. Start the application using one of the following commands:
+    - `python Python\main.py` - Starts with settings from config.ini
+    - `python Python\main.py GUI` - Starts in GUI mode (overrides config setting)
+    - `python Python\main.py CONSOLE` - Starts in console mode (overrides config setting)
+    - `python Python\main.py CONSOLE CAMERA` - Starts console mode with camera input
+    - `python Python\main.py CONSOLE IMAGE` - Starts console mode with image folder input
     - **Note for VS Code users**: Ensure you select the correct Python interpreter for your virtual environment
         - Press `Ctrl + Shift + P` and type `Python: Select Interpreter`
         - Select the Python version associated with your virtual environment (e.g., the one inside `virtualbox`)
-6. To deactivate the venv, enter the following command in the terminal
+7. To deactivate the venv, enter the following command in the terminal
     - `deactivate`
+
+## Configuration
+
+The application behavior can be customized via [config.ini](Python/config.ini) located in the Python folder. This file contains three main sections:
+
+### [settings]
+
+- **camera_index**: Camera device index (default: `0` for primary camera)
+- **picture_path**: Folder path for loading images (default: `Pictures`)
+- **mode**: Default input mode - `image` or `camera`
+- **run_mode**: Default execution mode - `GUI` or `CONSOLE`
+- **fontscale**: Font size for shape labels (default: `0.75`)
+- **thickness**: Line thickness for contour drawing (default: `1`)
+- **text_color**: RGB color for text labels (default: `(0,0,0)` - black)
+- **font**: OpenCV font type (default: `FONT_HERSHEY_COMPLEX_SMALL`)
+
+### [pattern_recognition]
+
+Defines HSV color ranges for shape detection. Each color has a lower and upper bound in HSV format `[Hue, Saturation, Value]`:
+
+- **Red**: Defined with two ranges (`red1` and `red2`) due to HSV hue wrapping at 0°/180°
+- **Green**: `[25, 52, 72]` to `[102, 255, 255]`
+- **Blue**: `[94, 120, 120]` to `[120, 255, 255]`
+- **Yellow**: `[15, 150, 20]` to `[35, 255, 255]`
+- **Purple**: `[130, 100, 100]` to `[160, 255, 255]`
+
+**Tip**: Adjust these ranges to fine-tune color detection sensitivity for different lighting conditions or camera characteristics.
+
+### [logging]
+
+- **path**: Output path for detection logs (default: `Output/log.csv`)
 
 ## Project Structure
 
