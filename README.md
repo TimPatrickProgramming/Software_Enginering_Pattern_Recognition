@@ -1,4 +1,4 @@
-# Software Engineering Pattern Recognition Project
+# Software Engineering Project: Pattern Recognition 
 
 ## Table of Contents
 
