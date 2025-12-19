@@ -168,7 +168,58 @@ graph TB
     style FileSystem fill:#999999,stroke:#6b6b6b,color:#ffffff
 ```
 
+#### Container Diagram
 
+The Container diagram shows the high-level technology choices and how the application is structured.
+
+```mermaid
+graph TB
+    User[User]
+    
+    subgraph "Pattern Recognition Application"
+        GUI[GUI Container<br/>PyQt6<br/>Provides interactive interface<br/>with mode switching]
+        
+        Console[Console Container<br/>Python + OpenCV<br/>Command-line interface<br/>for headless operation]
+        
+        Core[Core Processing Engine<br/>Python + OpenCV<br/>HSV conversion, contour detection,<br/>shape classification, visualization]
+        
+        DataModels[Data Models<br/>Python Classes<br/>Shape hierarchy representing<br/>detected patterns]
+        
+        Config[Configuration<br/>INI File<br/>HSV ranges, system settings,<br/>camera parameters]
+    end
+    
+    Camera[Camera/Webcam]
+    Images[Image Folder<br/>File System]
+    Logs[CSV Logs<br/>File System]
+    
+    User -->|Uses| GUI
+    User -->|Uses| Console
+    GUI -->|Processes via| Core
+    Console -->|Processes via| Core
+    Core -->|Creates| DataModels
+    Core -->|Reads from| Config
+    Core -->|Captures| Camera
+    Core -->|Loads| Images
+    Core -->|Writes| Logs
+    
+    style GUI fill:#1168bd,stroke:#0b4884,color:#ffffff
+    style Console fill:#1168bd,stroke:#0b4884,color:#ffffff
+    style Core fill:#1168bd,stroke:#0b4884,color:#ffffff
+    style DataModels fill:#1168bd,stroke:#0b4884,color:#ffffff
+    style Config fill:#1168bd,stroke:#0b4884,color:#ffffff
+    style User fill:#08427b,stroke:#052e56,color:#ffffff
+    style Camera fill:#999999,stroke:#6b6b6b,color:#ffffff
+    style Images fill:#999999,stroke:#6b6b6b,color:#ffffff
+    style Logs fill:#999999,stroke:#6b6b6b,color:#ffffff
+```
+
+**Key Architectural Decisions:**
+
+- **Dual Interface Strategy**: Separate GUI (PyQt6) and Console containers enable both interactive and automated usage scenarios
+- **Centralized Processing Core**: Shared processing engine ensures consistent detection logic across both interfaces
+- **Configuration-Driven Design**: External config.ini allows runtime customization without code changes
+- **HSV Color Space**: Chosen for robust color detection under varying lighting conditions
+- **CSV Logging**: Simple, portable format for detection results suitable for data analysis
 
 ### Static View - Class Diagram
 
