@@ -2,9 +2,14 @@
 
 ## Purpose of this Project
 
-With this Project we create a python script which is capable of realtime recognition of Patterns, like Squares and circles and their Colours.
-The Recognition can be done over a connected Camera with the camera mode or by supplying images to the script with the image mode.
-The script will then Highlight the Pattern on the provided images and log their shape and colour.
-The script can be cofigured via a external config file.
-The Base Patterns supported at the Moment are: circle, rectangle, square and triangle.
-The Base Colours supported at the Moment are: red, green, blue, yellow and violet
+This project implements a Python-based computer vision application for real-time pattern and color recognition. The system can identify geometric shapes (circles, rectangles, squares, and triangles) and their associated colors (red, green, blue, yellow and violet) from visual input.
+
+### Key Features
+
+- **Dual Input Modes**: Process images from a live camera feed or from a folder of static images
+- **Shape Detection**: Recognizes circles, rectangles, squares, and triangles using contour approximation
+- **Color Recognition**: Identifies five base colors (red, green, blue, yellow and violet) through HSV color space filtering
+- **Visual Feedback**: Highlights detected patterns directly on the processed images
+- **Automated Logging**: Records all detections with their shape type and color to a CSV file
+- **Configurable Settings**: Customize color ranges and detection parameters via an external configuration file
+
