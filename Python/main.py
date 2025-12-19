@@ -34,6 +34,23 @@ image_loader = Image_Loader.Image_Loader(config['settings']['picture_path'], int
 image_processor = Image_Processing.Image_Processing(colors, ranges)
 logger = Logger.Logger(config['logging']['path'])
 
+def resize_image(image: np.ndarray) -> np.ndarray:
+    """
+    Resizes the input image to the target width while maintaining aspect ratio.
+
+    Args:
+        image (np.ndarray): The input image to resize.
+        target_width (int): The desired width of the output image.
+
+    Returns:
+        np.ndarray: The resized image.
+    """
+    target_width = int(config['settings']['target_width'])
+    ratio = target_width / float(image.shape[1])
+    target_height = int(image.shape[0] * ratio)
+    resized_image = cv2.resize(image, (target_width, target_height))
+    return resized_image
+
 def run_console_mode(selected_input_mode:str) -> None:
     """
     Runs the console-based mode with OpenCV windows. 
@@ -56,6 +73,7 @@ def run_console_mode(selected_input_mode:str) -> None:
             for image in images:
                 image, shapes = image_processor.process_image(image)
                 logger.log_detection(shapes)
+                image = resize_image(image)
                 cv2.imshow('Image', image)
                 cv2.waitKey(0)
 
@@ -86,7 +104,6 @@ if __name__ == '__main__':
             run_mode = config['settings']['run_mode']
     else:
         run_mode = config['settings']['run_mode']    
-        
     if run_mode == 'GUI':
         app = QApplication(sys.argv)
         window = ShapeDetectorApp.ShapeDetectorApp(image_loader, image_processor, logger)
