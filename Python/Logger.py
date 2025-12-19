@@ -28,54 +28,40 @@ class Logger:
             shapes (list[Shape]): A list of Shape objects detected in the current frame/image.
         """
         now = datetime.datetime.now()
-
         current_frame_detections = {}
-        shapes_to_log = []
 
-        for shape in shapes:
-            M = cv2.moments(shape.approx)
-            if M["m00"] != 0:
-                center_x = int(M["m10"] / M["m00"])
-                center_y = int(M["m01"] / M["m00"])
-            else:
-                continue  # Skip logging if center cannot be calculated
+        try:
+            with open(self.log_path, 'a', newline='') as csvfile:
+                writer = csv.writer(csvfile)
 
-            current_pos = (center_x, center_y)
-            
-            shape_key = f"{shape.__class__.__name__}_{shape.color_name}_{current_pos}"
-            current_frame_detections[shape_key] = current_pos
+                if csvfile.tell() == 0: 
+                    writer.writerow(["Timestamp | ShapeType | ColorName"])
 
-            last_pos = self.last_detections.get(shape_key)
+                for shape in shapes:
+                    M = cv2.moments(shape.approx)
+                    if M["m00"] != 0:
+                        center_x = int(M["m10"] / M["m00"])
+                        center_y = int(M["m01"] / M["m00"])
+                    else:
+                        continue  # Skip logging if center cannot be calculated
 
-            if last_pos is None:
-                should_log = True
-            else:
-                dist_sq = (current_pos[0] - last_pos[0]) ** 2 + (current_pos[1] - last_pos[1]) ** 2
-                should_log = dist_sq >= self.DEBOUNCE_DISTANCE ** 2 
+                    current_pos = (center_x, center_y)
+                    shape_key = f"{shape.__class__.__name__}_{shape.color_name}"
+                    should_log = True
+                    last_pos = self.last_detections.get(shape_key)
 
-            if should_log:
-                class_name = shape.__class__.__name__.ljust(9, ' ')
-                shapes_to_log.append(f"{now} | {class_name} | {shape.color_name} | {center_x} | {center_y}")
+                    if last_pos:
+                        dist_sq = (current_pos[0] - last_pos[0]) ** 2 + (current_pos[1] - last_pos[1]) ** 2
+                        if dist_sq < self.DEBOUNCE_DISTANCE ** 2:
+                            should_log = False
 
-
-        if shapes_to_log:
-            try:
-                log_dir = os.path.dirname(self.log_path)
-                if log_dir and not os.path.exists(log_dir):
-                    os.makedirs(log_dir)
+                    if should_log:
+                        class_name = shape.__class__.__name__.ljust(9, ' ')
+                        writer.writerow([f"{now} | {class_name} | {shape.color_name}"])
                     
-                with open(self.log_path, 'a', newline='') as csvfile:
-                    writer = csv.writer(csvfile, delimiter=',')
-                    if csvfile.tell() == 0: 
-                        writer.writerow(["Timestamp", "ShapeType", "ColorName", "CenterX", "CenterY"])
-                        
-                    for data in shapes_to_log:
-                        writer.writerow(data)
-                        
-            except IOError as e:
-                print(f"FATAL LOGGING ERROR: Failed to write to log file {self.log_path}: {e}")
-            except Exception as e:
-                print(f"Unexpected logging error: {e}")
+                    current_frame_detections[shape_key] = current_pos
 
-        # 4. Update the history (only update shapes that were present in the current frame)
-        self.last_detections = current_frame_detections
+                self.last_detections = current_frame_detections
+
+        except Exception as e:
+            print(f"Unexpected logging error: {e}")
