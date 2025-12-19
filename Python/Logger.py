@@ -7,7 +7,7 @@ class Logger:
     """
     Handles logging of detected shapes (type and color) to a CSV file.
     """
-    DEBOUNCE_DISTANCE: int = 1000   # Pixels: Minimum movement required to log the shape again
+    DEBOUNCE_DISTANCE: int = 100   # Pixels: Minimum movement required to log the shape again
 
     def __init__(self, log_path:str) -> None:
         """
@@ -35,7 +35,7 @@ class Logger:
                 writer = csv.writer(csvfile)
 
                 if csvfile.tell() == 0: 
-                    writer.writerow(["Timestamp | ShapeType | ColorName"])
+                    writer.writerow(["Timestamp                  | ShapeType | ColorName"])
 
                 for shape in shapes:
                     M = cv2.moments(shape.approx)
