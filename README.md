@@ -1,4 +1,4 @@
-# Software Engineering Pattern Recognition Project
+# Software Engineering Project Pattern Recognition 
 
 ## Purpose of this Project
 
