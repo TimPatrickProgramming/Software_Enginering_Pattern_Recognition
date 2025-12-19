@@ -3,10 +3,18 @@
 ## Table of Contents
 
 - [Purpose of this Project](#purpose-of-this-project)
+  - [Key Features](#key-features)
 - [System Requirements](#system-requirements)
+  - [Software Requirements](#software-requirements)
+  - [Dependencies](#dependencies)
+  - [Hardware Requirements](#hardware-requirements)
 - [Project Setup](#project-setup)
 - [Configuration](#configuration)
+  - [settings](#settings)
+  - [pattern_recognition](#pattern_recognition)
+  - [logging](#logging)
 - [Project Structure](#project-structure)
+  - [Key Files Description](#key-files-description)
 - [Architecture](#architecture)
   - [C4 Model - Context & Container Diagrams](#c4-model---context--container-diagrams)
   - [Static View - Class Diagram](#static-view---class-diagram)
@@ -132,7 +140,7 @@ Software_Enginering_Pattern_Recognition/
 ### Key Files Description
 
 - **[main.py](Python/main.py)**: Orchestrates application startup, reads configuration, and delegates to either GUI or console mode
-- **[config.ini](Python/config.ini)**: Defines HSV color ranges for detection and system parameters (camera index, log path, default modes)
+- **[config.ini](Python/config.ini)**: Defines HSV color ranges for detection and system parameters (camera index, log path, default modes) For more Information see [Configuration](#configuration) Segment
 - **[requirements.txt](requirements.txt)**: Lists all Python package dependencies with version specifications
 
 
