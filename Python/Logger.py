@@ -19,6 +19,11 @@ class Logger:
         self.log_path = log_path
         self.last_detections = {}  # Stores {key: (last_x, last_y)}
 
+        log_dir = os.path.dirname(self.log_path)
+        if log_dir and not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+            print(f"Created directory: {log_dir}")
+
     def log_detection(self, shapes:list) -> None:
         """
         Writes the timestamp, shape type, and color name for each detected shape
