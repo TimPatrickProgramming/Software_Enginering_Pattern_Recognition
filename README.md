@@ -1,8 +1,18 @@
-# Software Engineering Project Pattern Recognition 
+# Software Engineering Pattern Recognition Project
+
+## Table of Contents
+
+- [Purpose of this Project](#purpose-of-this-project)
+- [System Requirements](#system-requirements)
+- [Project Setup](#project-setup)
+- [Project Structure](#project-structure)
+- [Architecture](#architecture)
+  - [Static View - Class Diagram](#static-view---class-diagram)
+  - [Dynamic View - Sequence Diagram](#dynamic-view---sequence-diagram)
 
 ## Purpose of this Project
 
-This project implements a Python-based computer vision application for real-time pattern and color recognition. The system can identify geometric shapes (circles, rectangles, squares, and triangles) and their associated colors (red, green, blue, yellow and violet) from visual input.
+This project was developed as part of the **Software Engineering** course and implements a Python-based computer vision application for real-time pattern and color recognition. The system can identify geometric shapes (circles, rectangles, squares, and triangles) and their associated colors (red, green, blue, yellow and violet) from visual input.
 
 ### Key Features
 
