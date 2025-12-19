@@ -36,6 +36,10 @@ For the project setup, a virtual environment needs to be created. Follow the ste
 
 ## Architecture
 
+The architecture of this pattern recognition system follows object-oriented design principles with clear separation of concerns. The application is structured into distinct layers: data acquisition (Image_Loader), processing logic (Image_Processing, Visualisation), data models (Shape hierarchy), persistence (Logger), and presentation (ShapeDetectorApp for GUI, main.py for console mode).
+
+This modular architecture enables flexibility in input sources (camera or folder), processing pipelines, and output modes (GUI or console), while maintaining a clean dependency structure where each component has a well-defined responsibility.
+
 ### Static View - Class Diagram
 
 ```mermaid
@@ -123,4 +127,22 @@ classDiagram
     ShapeDetectorApp --> Logger : uses
     Logger --> Shape : logs
 ```
+
+#### Class Responsibilities
+
+**Data Models:**
+- **Shape (Abstract)**: Base class for all geometric shapes, storing contour approximation and color information
+- **Triangle, Rectangle, Square, Circle**: Concrete shape implementations inheriting from Shape
+
+**Core Processing:**
+- **Image_Loader**: Manages image acquisition from both camera streams and folder-based image collections
+- **Image_Processing**: Core vision processing - converts images to HSV color space, applies color masks, detects contours, and classifies shapes
+- **Visualisation**: Renders detected shapes and their labels onto processed images
+
+**Application Layer:**
+- **ShapeDetectorApp**: PyQt6-based GUI providing interactive mode switching, folder selection, and real-time visualization
+- **Logger**: Persists detection results to CSV files for analysis and record-keeping
+
+**Dependencies:**
+The architecture maintains a unidirectional dependency flow: ShapeDetectorApp orchestrates Image_Loader, Image_Processing, and Logger; Image_Processing creates Shape instances and utilizes Visualisation for rendering; Logger references Shape objects for persistence.
 
