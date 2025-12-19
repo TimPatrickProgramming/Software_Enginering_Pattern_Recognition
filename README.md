@@ -13,6 +13,30 @@ This project implements a Python-based computer vision application for real-time
 - **Automated Logging**: Records all detections with their shape type and color to a CSV file
 - **Configurable Settings**: Customize color ranges and detection parameters via an external configuration file
 
+## System Requirements
+
+### Software Requirements
+
+- **Python Version**: Python 3.8 or higher recommended
+- **Operating System**: 
+  - Windows 10/11 (tested)
+
+### Dependencies
+
+The project requires the following key libraries (all listed in [requirements.txt](requirements.txt)):
+
+- **opencv-python** (4.12.0.88): Core computer vision functionality for image processing and contour detection
+- **PyQt6**: GUI framework for the interactive application interface
+- **numpy** (2.3.4): Numerical operations and array manipulations
+- **torch** (2.9.0): Deep learning framework (for potential future extensions)
+- **scipy**, **scikit-learn**: Scientific computing and machine learning utilities
+
+### Hardware Requirements
+
+- **Camera**: USB webcam or built-in camera for live detection mode
+- **RAM**: Minimum 4GB (8GB recommended for smooth GUI operation)
+- **Processor**: Modern multi-core CPU for real-time processing
+
 ## Project Setup
 
 For the project setup, a virtual environment needs to be created. Follow the steps below to set up the venv and execute the script.
