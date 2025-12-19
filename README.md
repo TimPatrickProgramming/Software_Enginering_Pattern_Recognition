@@ -146,3 +146,90 @@ classDiagram
 **Dependencies:**
 The architecture maintains a unidirectional dependency flow: ShapeDetectorApp orchestrates Image_Loader, Image_Processing, and Logger; Image_Processing creates Shape instances and utilizes Visualisation for rendering; Logger references Shape objects for persistence.
 
+### Dynamic View - Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Main
+    participant App as ShapeDetectorApp
+    participant Loader as Image_Loader
+    participant Processor as Image_Processing
+    participant Vis as Visualisation
+    participant Log as Logger
+    participant Shape
+
+    User->>Main: Start Application
+    Main->>Main: Read config.ini
+    Main->>Loader: Create Image_Loader
+    Main->>Processor: Create Image_Processing
+    Main->>Log: Create Logger
+    
+    alt GUI Mode
+        Main->>App: Create ShapeDetectorApp
+        App->>App: setup_ui()
+        
+        loop Camera/Image Mode Active
+            alt Camera Mode
+                App->>Loader: load_camera_image()
+                Loader-->>App: return frame
+            else Image Mode
+                App->>Loader: load_folder_images()
+                Loader-->>App: return images[]
+            end
+            
+            App->>Processor: process_image(image)
+            Processor->>Processor: Convert to HSV
+            
+            loop For each color range
+                Processor->>Processor: Create color mask
+                Processor->>Processor: Find contours
+                
+                loop For each contour
+                    Processor->>Processor: Approximate polygon
+                    Processor->>Processor: Calculate area
+                    
+                    alt area > 300
+                        alt 3 vertices
+                            Processor->>Shape: Create Triangle
+                        else 4 vertices
+                            Processor->>Processor: Check if square
+                            alt Square
+                                Processor->>Shape: Create Square
+                            else Rectangle
+                                Processor->>Shape: Create Rectangle
+                            end
+                        else > 6 vertices
+                            Processor->>Shape: Create Circle
+                        end
+                    end
+                end
+            end
+            
+            Processor->>Vis: draw_contours(image, shapes)
+            Vis-->>Processor: return annotated_image
+            Processor-->>App: return (image, shapes)
+            
+            App->>Log: log_detection(shapes)
+            Log->>Log: Write to CSV
+            
+            App->>User: Display processed image
+        end
+        
+    else Console Mode
+        loop Until Quit
+            alt Camera Mode
+                Main->>Loader: load_camera_image()
+                Loader-->>Main: return frame
+            else Image Mode
+                Main->>Loader: load_folder_images()
+                Loader-->>Main: return images[]
+            end
+            
+            Main->>Processor: process_image(image)
+            Processor-->>Main: return (image, shapes)
+            Main->>Log: log_detection(shapes)
+            Main->>User: Display with OpenCV
+        end
+    end
+```
