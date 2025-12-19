@@ -26,6 +26,11 @@ For the project setup, a virtual environment needs to be created. Follow the ste
 4. Install the required libraries from requirements.txt
     - `pip install -r requirements.txt`
 5. Now you are ready to start the project by executing main.py
+    - `python main.py`
+    - **Note for VS Code users**: Ensure you select the correct Python interpreter for your virtual environment
+        - Press `Ctrl + Shift + P` and type `Python: Select Interpreter`
+        - Select the Python version associated with your virtual environment (e.g., the one inside `virtualbox`)
 6. To deactivate the venv, enter the following command in the terminal
     - `deactivate`
+
 
