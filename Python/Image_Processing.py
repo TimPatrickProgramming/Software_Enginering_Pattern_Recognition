@@ -42,17 +42,16 @@ class Image_Processing:
             if color_name.startswith("red"):
                 color_name = "red"
             # detect contours / shapes
-            contours, hierarchy = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+            contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             for contour in contours:
                 approx = cv2.approxPolyDP(contour,0.03*cv2.arcLength(contour,True),True)
                 shape = len(approx)
                 approx = approx.reshape(-1, 2)
                 area = cv2.contourArea(contour)
-                if area > 300:
+                if area > 5000:
                     # Get the minimum area rectangle
                     rect = cv2.minAreaRect(contour)
                     box = cv2.boxPoints(rect)     # Get 4 corner points
-                    #box = np.int0(box)            # Convert to int
                     box = box.astype(int)
                     # Initialize shape_selector
                     if shape == 3:
